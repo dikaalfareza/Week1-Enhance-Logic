@@ -2,6 +2,7 @@ class Bank {
   // Tulis Code Disini
   constructor(name) {
     this.name = name;
+    this.customers = new Map();
   }
 
   generateAccountNumber() {
@@ -21,6 +22,7 @@ class Bank {
     if (newMember) {
       if (newMember.balance >= newMember.minimumBalance) {
         person.bankAccount = newMember;
+        this.customers.set(newMember.memberName, newMember);
         console.log(
           `Selamat datang ke ${this.name}, ${newMember.memberName}. Nomor Akun anda adalah ${newMember.accountNumber}. Total saldo adalah ${newMember.balance}`
         );
@@ -207,3 +209,4 @@ console.log(nadiaAccount);
 //   ],
 //   type: 'platinum'
 // }
+console.log(yudhistiraBank);

@@ -133,62 +133,27 @@ console.log(
 // Soal 2: Depth-First Search (DFS)
 class Graph {
   // Implementasi graph dan metode DFS
-  constructor() {
-    this.nodes = new Map();
-  }
-
-  addNode(value) {
-    this.nodes.set(value, new Node(value));
-  }
-
-  addEdge(source, destination) {
-    if (!this.nodes.has(source) || !this.nodes.has(destination)) {
-      throw new Error("Source or destination node does not exist.");
-    }
-
-    let sourceNode = this.nodes.get(source);
-    let destinationNode = this.nodes.get(destination);
-    sourceNode.addEdge(destinationNode);
-  }
-
-  dfs(currentNode, visited) {
-    if (!currentNode || visited.has(currentNode.value)) return;
-    visited.add(currentNode.value);
-
-    for (const neighbor of currentNode.edges) {
-      this.dfs(neighbor, visited);
-    }
-  }
-
-  countIslands(grid) {
-    const graph = new Graph();
+  islandCounter(grid) {
     const rows = grid.length;
     const cols = grid[0].length;
+    let counter = 0;
+
+    function dfs(r, c) {
+      if (r < 0 || c < 0 || r >= rows || c >= cols || grid[r][c] === 0) return;
+      grid[r][c] = 0;
+
+      dfs(r - 1, c);
+      dfs(r + 1, c);
+      dfs(r, c - 1);
+      dfs(r, c + 1);
+    }
 
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         if (grid[r][c] === 1) {
-          let newNode = `${r}${c}`;
-          graph.addNode(newNode);
-
-          if (r > 0 && grid[r - 1][c] === 1) {
-            graph.addEdge(newNode, `${r - 1}${c}`);
-            graph.addEdge(`${r - 1}${c}`, newNode);
-          }
-          if (c > 0 && grid[r][c - 1] === 1) {
-            graph.addEdge(newNode, `${r}${c - 1}`);
-            graph.addEdge(`${r}${c - 1}`, newNode);
-          }
+          counter++;
+          dfs(r, c);
         }
-      }
-    }
-
-    let counter = 0;
-    const visited = new Set();
-    for (const node of graph.nodes.values()) {
-      if (!visited.has(node.value)) {
-        counter++;
-        this.dfs(node, visited);
       }
     }
 
@@ -196,21 +161,10 @@ class Graph {
   }
 }
 
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.edges = [];
-  }
-
-  addEdge(node) {
-    this.edges.push(node);
-  }
-}
-
 function islandCount(grid) {
   // Implementasi DFS untuk menghitung jumlah pulau
   const graph = new Graph();
-  const totalIsland = graph.countIslands(grid);
+  const totalIsland = graph.islandCounter(grid);
   return totalIsland;
 }
 
